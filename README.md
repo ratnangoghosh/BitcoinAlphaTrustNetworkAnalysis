@@ -87,6 +87,12 @@ The primary objectives of the code are:
 
 ## Ouput
 
+- [bridge_users.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/bridge_users.csv)
+- [segment_profiles.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/segment_profiles.csv)
+- [user_profiles.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/user_profiles.csv)
+- [user_segments_kmeans.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/user_segments_kmeans.csv)
+- [risk_attitude_by_segment.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/risk_attitude_by_segment.csv)
+
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/user_segments_pca.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/user_segments_tsne.png?raw=true)
 
