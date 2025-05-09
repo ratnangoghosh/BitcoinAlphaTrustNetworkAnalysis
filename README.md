@@ -87,6 +87,9 @@ The primary objectives of the code are:
 
 ## Ouput
 
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A2_ss.png?raw=true)](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/docs/A2.html)
+click the above image to view the interactive website
+
 - [bridge_users.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/bridge_users.csv)
 - [segment_profiles.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/segment_profiles.csv)
 - [user_profiles.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/user_profiles.csv)
