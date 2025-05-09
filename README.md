@@ -85,10 +85,13 @@ The primary objectives of the code are:
 - **Trust Optimization**: Segment-specific trust weighting improves accuracy.
 - **User Experience**: Tailored interfaces enhance engagement.
 
-## Ouput
+## Interactive Website
 
-[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A2_ss.png?raw=true)](https://username.github.io/BitcoinAlphaTrustNetworkAnalysis/A3.html)
-click the above image to view the interactive website
+Click the below image to view the interactive website:
+
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A2_ss.png?raw=true)](https://ratnangoghosh.github.io/BitcoinAlphaTrustNetworkAnalysis/A3.html)
+
+## Output
 
 - [bridge_users.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/bridge_users.csv)
 - [segment_profiles.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/segment_profiles.csv)
@@ -124,10 +127,13 @@ The primary goal of the code is to enhance the security and integrity of decentr
 
 This code provides a robust framework for analyzing trust networks, offering insights into vulnerabilities and manipulative behaviors. It supports platform integrity by identifying anomalies that could undermine trust mechanisms, making it a valuable tool for securing decentralized systems like Bitcoin Alpha.
 
-## Output
+## Interactive Website
+
+Click the below image to view the interactive website:
 
 [![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://ratnangoghosh.github.io/BitcoinAlphaTrustNetworkAnalysis/A2.html)
-click the above image to view the interactive website
+
+## Output
 
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T1.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T2.png?raw=true)
