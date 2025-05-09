@@ -87,7 +87,7 @@ The primary objectives of the code are:
 
 ## Ouput
 
-[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A2_ss.png?raw=true)](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/docs/A2.html)
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A2_ss.png?raw=true)](https://username.github.io/BitcoinAlphaTrustNetworkAnalysis/A3.html)
 click the above image to view the interactive website
 
 - [bridge_users.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_files/bridge_users.csv)
@@ -126,7 +126,7 @@ This code provides a robust framework for analyzing trust networks, offering ins
 
 ## Output
 
-[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/docs/A3.html)
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://username.github.io/BitcoinAlphaTrustNetworkAnalysis/A2.html)
 click the above image to view the interactive website
 
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T1.png?raw=true)
