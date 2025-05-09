@@ -1,4 +1,5 @@
 # Bitcoin Alpha Trust Network Analysis - A Network Science Approach
+## Ratnango Ghosh & Vaibhav Gupta
 
 This repository contains code to analyze and simulate distrust cascades and triadic sign‐pattern transitions on the Bitcoin-Alpha trust network.
 
