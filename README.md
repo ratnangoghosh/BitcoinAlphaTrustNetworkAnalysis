@@ -101,3 +101,9 @@ The primary goal of the code is to enhance the security and integrity of decentr
 ## Implications
 
 This code provides a robust framework for analyzing trust networks, offering insights into vulnerabilities and manipulative behaviors. It supports platform integrity by identifying anomalies that could undermine trust mechanisms, making it a valuable tool for securing decentralized systems like Bitcoin Alpha.
+
+# References
+
+- [Dynamics of Epidemic Spreading on Signed Networks](https://www.sciencedirect.com/science/article/pii/S0960077921006482)
+- [Unsupervised Clustering of Bitcoin Transactions](https://jfin-swufe.springeropen.com/articles/10.1186/s40854-023-00525-y)
+- [REV2 - Fraudulent User Prediction in Rating Platforms](https://dl.acm.org/doi/10.1145/3159652.3159729)
