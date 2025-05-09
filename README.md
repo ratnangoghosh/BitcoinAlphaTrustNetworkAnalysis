@@ -126,7 +126,7 @@ This code provides a robust framework for analyzing trust networks, offering ins
 
 ## Output
 
-[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://username.github.io/BitcoinAlphaTrustNetworkAnalysis/A2.html)
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://ratnangoghosh.github.io/BitcoinAlphaTrustNetworkAnalysis/A2.html)
 click the above image to view the interactive website
 
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T1.png?raw=true)
@@ -136,8 +136,6 @@ click the above image to view the interactive website
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_negative_cluster.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_temporal_anomalies.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_trust_asymmetry.png?raw=true)
-
-[View Bitcoin Alpha Trust Network Analysis](http://htmlpreview.github.io/?https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/A3.html)
 
 # References
 
