@@ -32,7 +32,7 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
 
 # Application 1 - Where Distrust Lives? How it Spreads? Who Drives it? When it Explodes? How can you Stop it?
 
-Code - [Application1,py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application1.py)
+Code - [Application1.py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application1.py)
 
 Detailed Explanation - [Application1_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application1_Report.pdf)
 
@@ -50,6 +50,10 @@ The primary goal is to:
 This simulation provides a robust tool for understanding distrust in trust-based networks, offering insights into monitoring influential nodes, tuning platform parameters (e.g., `alpha`), and designing structural interventions to enhance network resilience.
 
 # Application 2 - Group Users into Behaviour based Categories.
+
+Code - [Application2.py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application2.py)
+
+Detailed Explanation - [Application2_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application2_Report.pdf)
 
 ## Overview 
 
@@ -69,6 +73,10 @@ The primary objectives of the code are:
 - **User Experience**: Tailored interfaces enhance engagement.
 
 # Application 3 - Find the Odd Ones Out (Anomalies)
+
+Code - [Application3.py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application3.py)
+
+Detailed Explanation - [Application3_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application3_Report.pdf)
 
 ## Overview 
 
