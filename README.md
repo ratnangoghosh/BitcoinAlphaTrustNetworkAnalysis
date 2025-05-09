@@ -115,6 +115,16 @@ The primary goal of the code is to enhance the security and integrity of decentr
 
 This code provides a robust framework for analyzing trust networks, offering insights into vulnerabilities and manipulative behaviors. It supports platform integrity by identifying anomalies that could undermine trust mechanisms, making it a valuable tool for securing decentralized systems like Bitcoin Alpha.
 
+## Output
+
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T1.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T2.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_clusters.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_manipulation_ring.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_negative_cluster.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_temporal_anomalies.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_trust_asymmetry.png?raw=true)
+
 # References
 
 - [Dynamics of Epidemic Spreading on Signed Networks](https://www.sciencedirect.com/science/article/pii/S0960077921006482)
