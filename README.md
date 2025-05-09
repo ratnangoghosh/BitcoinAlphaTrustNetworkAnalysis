@@ -312,6 +312,218 @@ This simulation provides a robust tool for understanding distrust in trust-based
 
 # Application 2 - Group Users into Behaviour based Categories.
 
+## Overview 
 
+`Application2.py` is a Python script designed to analyze the Bitcoin Alpha trust network, a peer-to-peer cryptocurrency platform where users assign trust ratings to one another. The code leverages network science and machine learning techniques to extract user profiles, segment users into behavioral archetypes, and analyze their trust and risk attitudes. The implementation is encapsulated in the `BitcoinTrustAnalysis` class, which processes the trust network data, performs clustering, and generates insights into user behaviors and network dynamics.
+
+### Purpose
+The primary objectives of the code are:
+- **Profile Users**: Build multi-dimensional user profiles using trust metrics, centrality measures, and community affiliations.
+- **Segment Users**: Identify distinct user segments or archetypes through clustering.
+- **Analyze Segments**: Characterize each segment’s trust behavior, risk attitudes, and network roles.
+- **Visualize Results**: Produce visualizations to illustrate user segment distributions and relationships.
+
+This analysis aims to decode how trust influences user interactions and network stability in a decentralized platform like Bitcoin Alpha.
+
+---
+
+## Key Components and Functionality
+
+### 1. **Class Structure: `BitcoinTrustAnalysis`**
+- **Initialization** (`__init__`):
+  - **Input**: Takes a CSV file path containing trust network data (columns: `source`, `target`, `rating`, optionally `time`) and an output directory.
+  - **Process**: Loads the data into a Pandas DataFrame, constructs a directed weighted graph (`self.G`) using NetworkX, and initializes a dictionary for user profiles (`self.user_profiles`).
+  - **Graph**: Edges represent trust relationships, with weights corresponding to trust ratings.
+
+```python
+def __init__(self, filepath, output_dir="./output"):
+    self.filepath = filepath
+    self.output_dir = output_dir
+    os.makedirs(output_dir, exist_ok=True)
+    self.data = pd.read_csv(filepath)
+    self.G = nx.DiGraph()
+    for _, row in self.data.iterrows():
+        self.G.add_edge(row['source'], row['target'], weight=row['rating'])
+    self.user_profiles = {}
+```
+
+---
+
+### 2. **User Profile Creation** (`create_user_profiles`)
+- **Functionality**:
+  - Computes network metrics:
+    - **Betweenness Centrality**: Approximated with `k=100` for efficiency.
+    - **Eigenvector Centrality**: Handled for disconnected components with fallbacks.
+    - **In/Out Degree Centrality**: Measures incoming and outgoing connections.
+  - Detects communities using the Louvain method on an undirected graph with absolute weights.
+  - Calculates trust metrics for each user:
+    - Average and total trust given/received.
+    - Counts and averages of positive/negative trust given/received.
+    - Trust selectivity (variance of trust given) and trust ratio (given/received).
+  - Stores results in a DataFrame (`self.user_profiles_df`) and saves it as `user_profiles.csv`.
+- **Purpose**: Provides a comprehensive view of each user’s network position and trust behavior.
+
+```python
+def create_user_profiles(self):
+    betweenness_centrality = nx.betweenness_centrality(self.G, k=100)
+    eigenvector_centrality = nx.eigenvector_centrality_numpy(self.G, weight='weight')
+    communities = best_partition(nx.Graph(self.G))
+    for node in self.G.nodes():
+        out_edges = list(self.G.out_edges(node, data=True))
+        trust_given = [e[2]['weight'] for e in out_edges]
+        self.user_profiles[node] = {
+            'out_degree': len(out_edges),
+            'avg_trust_given': np.mean(trust_given) if trust_given else 0,
+            'trust_selectivity': np.var(trust_given) if trust_given else 0,
+            'betweenness_centrality': betweenness_centrality.get(node, 0)
+        }
+    self.user_profiles_df = pd.DataFrame.from_dict(self.user_profiles, orient='index')
+    self.user_profiles_df.to_csv(os.path.join(self.output_dir, 'user_profiles.csv'))
+```
+
+---
+
+### 3. **User Segmentation** (`identify_user_segments`)
+- **Functionality**:
+  - Selects features (e.g., degree, trust metrics, centrality) for clustering.
+  - Standardizes features using `StandardScaler`.
+  - Applies dimensionality reduction:
+    - **PCA**: Reduces to 2 components for visualization.
+    - **t-SNE**: Provides non-linear 2D projection with `perplexity=30`, `n_iter=1000`.
+  - Clusters users with:
+    - **KMeans**: Default `n_clusters=5`.
+    - **DBSCAN**: Alternative density-based clustering (`eps=0.5`, `min_samples=5`).
+  - Adds cluster labels and reduced dimensions to `self.user_profiles_df`, saved as `user_segments_<method>.csv`.
+- **Purpose**: Groups users into archetypes based on behavioral and structural similarities.
+
+```python
+def identify_user_segments(self, n_clusters=5, method='kmeans'):
+    features = ['out_degree', 'in_degree', 'avg_trust_given', 'betweenness_centrality']
+    X = self.user_profiles_df[features].fillna(0)
+    X_scaled = StandardScaler().fit_transform(X)
+    X_pca = PCA(n_components=2).fit_transform(X_scaled)
+    X_tsne = TSNE(n_components=2).fit_transform(X_scaled)
+    clusters = KMeans(n_clusters=n_clusters).fit_predict(X_scaled) if method == 'kmeans' else DBSCAN().fit_predict(X_scaled)
+    self.user_profiles_df['cluster'] = clusters
+    self.user_profiles_df['pca_x'] = X_pca[:, 0]
+    self.user_profiles_df['tsne_x'] = X_tsne[:, 0]
+```
+
+---
+
+### 4. **Segment Analysis** (`analyze_user_segments`)
+- **Functionality**:
+  - Aggregates metrics (e.g., mean out-degree, trust given) for each cluster.
+  - Computes segment size and percentage of the total network.
+  - Saves results as `segment_profiles.csv`.
+- **Purpose**: Summarizes each segment’s characteristics to define archetypes like Power Users or Skeptics.
+
+```python
+def analyze_user_segments(self):
+    segment_stats = []
+    for cluster_id in self.user_profiles_df['cluster'].unique():
+        cluster_data = self.user_profiles_df[self.user_profiles_df['cluster'] == cluster_id]
+        stats = {
+            'cluster_id': cluster_id,
+            'size': len(cluster_data),
+            'size_percentage': len(cluster_data) / len(self.user_profiles_df) * 100
+        }
+        segment_stats.append(stats)
+    self.segment_profiles = pd.DataFrame(segment_stats)
+    self.segment_profiles.to_csv(os.path.join(self.output_dir, 'segment_profiles.csv'))
+```
+
+---
+
+### 5. **Bridge User Identification** (`identify_bridge_users`)
+- **Functionality**:
+  - Identifies users in the top percentile (default 95%) of betweenness centrality.
+  - Saves results as `bridge_users.csv`.
+- **Purpose**: Pinpoints users critical for connecting communities, enhancing network cohesion.
+
+```python
+def identify_bridge_users(self, percentile=95):
+    threshold = self.user_profiles_df['betweenness_centrality'].quantile(percentile / 100)
+    bridge_users = self.user_profiles_df[self.user_profiles_df['betweenness_centrality'] >= threshold]
+    bridge_users.to_csv(os.path.join(self.output_dir, 'bridge_users.csv'))
+```
+
+---
+
+### 6. **Risk Attitude Analysis** (`analyze_risk_attitudes`)
+- **Functionality**:
+  - Computes:
+    - **Risk-taking**: Fraction of positive trust given.
+    - **Trust Volatility**: Variance in trust given (selectivity).
+  - Aggregates metrics by segment with statistics (mean, std, min, max).
+  - Saves results as `risk_attitude_by_segment.csv`.
+- **Purpose**: Evaluates how segments differ in trust and risk behaviors.
+
+```python
+def analyze_risk_attitudes(self):
+    df = self.user_profiles_df
+    df['risk_taking'] = df['positive_trust_given_count'] / (df['positive_trust_given_count'] + df['negative_trust_given_count'] + 1e-10)
+    df['trust_volatility'] = df['trust_selectivity']
+    risk_by_segment = df.groupby('cluster').agg({'risk_taking': 'mean', 'trust_volatility': 'mean'})
+    risk_by_segment.to_csv(os.path.join(self.output_dir, 'risk_attitude_by_segment.csv'))
+```
+
+---
+
+### 7. **Visualizations** (`visualize_segments`)
+- **Functionality**:
+  - Creates scatter plots using t-SNE and PCA projections, colored by cluster.
+  - Saves as `user_segments_tsne.png` and `user_segments_pca.png`.
+- **Purpose**: Visualizes segment separation and network structure.
+
+```python
+def visualize_segments(self):
+    plt.scatter(self.user_profiles_df['tsne_x'], self.user_profiles_df['tsne_y'], c=self.user_profiles_df['cluster'])
+    plt.savefig(os.path.join(self.output_dir, 'user_segments_tsne.png'))
+```
+
+---
+
+### 8. **Complete Analysis** (`run_complete_analysis`)
+- **Functionality**:
+  - Orchestrates the full pipeline: profile creation, segmentation, analysis, bridge identification, risk analysis, and visualization.
+  - Returns a dictionary of results.
+- **Purpose**: Provides a single method to execute the entire analysis.
+
+```python
+def run_complete_analysis(self, n_clusters=5, method='kmeans', bridge_percentile=95):
+    self.create_user_profiles()
+    self.identify_user_segments(n_clusters=n_clusters)
+    self.analyze_user_segments()
+    self.identify_bridge_users(bridge_percentile)
+    self.analyze_risk_attitudes()
+    self.visualize_segments()
+```
+
+---
+
+## Technical Details
+- **Dependencies**: NetworkX, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn, python-louvain, tqdm.
+- **Efficiency**: Uses approximations (e.g., `k=100` for betweenness) for large networks.
+- **Output**: Generates CSVs (e.g., `user_profiles.csv`, `segment_profiles.csv`) and PNG visualizations in the output directory.
+
+---
+
+## Key Insights 
+The analysis identified five user archetypes:
+1. **Power Users (Cluster 0)**: High connectivity, calculated risk-takers (4.18% of network).
+2. **Casual Users (Cluster 1)**: Majority (84.24%), minimal engagement, variable risk.
+3. **Super Connectors (Cluster 2)**: Elite minority (0.40%), high influence, strategic risk managers.
+4. **Trusting Peripheral Users (Cluster 3)**: High trust givers (8.51%), growth facilitators.
+5. **Skeptics (Cluster 4)**: Vigilant (2.67%), low risk tolerance, threat detectors.
+
+These segments form a balanced ecosystem, supporting network growth and security.
+
+---
+
+## Implications
+- **Security**: Skeptics can enhance threat detection; trusting users need education.
+- **Trust Optimization**: Segment-specific trust weighting improves accuracy.
+- **User Experience**: Tailored interfaces enhance engagement.
 
 # Application 3 - Find the Odd Ones Out (Anomalies)
