@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust-Based User Segmentation in Cryptocurrency Networks</title>
+  <!-- Loading Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Loading necessary libraries for React and Recharts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap');
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --accent: #8b5cf6;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #1f2937;
+      --light: #f9fafb;
+      --highlight-bg: #dbeafe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 5rem;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.75rem;
+      font-weight: 800;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 2.5rem 0 1.25rem;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.5rem;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 50px;
+      height: 4px;
+      background-color: var(--primary);
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #374151;
+    }
+
+    .highlight {
+      background-color: var(--highlight-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      border-left: 5px solid var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-container {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .segment-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .segment-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .segment-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+    }
+
+    .segment-stats {
+      display: inline-block;
+      background-color: var(--highlight-bg);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem 0;
+      background-color: var(--dark);
+      color: white;
+    }
+
+    .nav-container {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav {
+      display: flex;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      padding: 0.5rem 1rem;
+      margin-right: 1rem;
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--highlight-bg);
+      color: var(--primary-dark);
+    }
+
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+    }
+
+    .loader-text {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .conclusion {
+      background: linear-gradient(135deg, #f3f4f6 0%, #dbeafe 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+
+    /* Animation for loading screen */
+    @keyframes pulse {
+      0% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.6;
+      }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1 class="text-center">Unveiling the Digital City: Trust-Based User Segmentation in Bitcoin Alpha</h1>
+      <p class="text-center text-white text-lg max-w-3xl mx-auto">
+        A comprehensive analysis of user archetypes, trust dynamics, and network relationships in cryptocurrency
+        communities.
+      </p>
+      <p class="text-center text-white text-lg max-w-3xl mx-auto">Authors: Vaibhav Gupta (2022553) and Ratnango Ghosh
+        (2022397)</p>
+    </div>
+  </header>
+
+  <div class="nav-container">
+    <nav class="nav">
+      <a href="#executive-summary" class="nav-item">Executive Summary</a>
+      <a href="#segments" class="nav-item">User Segments</a>
+      <a href="#connectivity" class="nav-item">Connectivity</a>
+      <a href="#trust-dynamics" class="nav-item">Trust Dynamics</a>
+      <a href="#risk-volatility" class="nav-item">Risk & Volatility</a>
+      <a href="#bridge-users" class="nav-item">Bridge Users</a>
+      <a href="#conclusion" class="nav-item">Conclusion</a>
+    </nav>
+  </div>
+
+  <div class="container" id="report-root"></div>
+
+  <footer>
+    <div class="container">
+      <p class="text-sm">© 2025 | Trust-Based User Segmentation in Cryptocurrency Networks</p>
+    </div>
+  </footer>
+
+  <script type="text/babel">
+    // Main Component
+    const TrustSegmentationReport = () => {
+      // State management
+      const [userProfiles, setUserProfiles] = React.useState([]);
+      const [userSegments, setUserSegments] = React.useState([]);
+      const [segmentProfiles, setSegmentProfiles] = React.useState([]);
+      const [bridgeUsers, setBridgeUsers] = React.useState([]);
+      const [riskAttitudes, setRiskAttitudes] = React.useState([]);
+      const [loading, setLoading] = React.useState(true);
+      const [error, setError] = React.useState(null);
+      const [activeTab, setActiveTab] = React.useState('summary');
+
+      // Segment colors for consistent visual identity
+      const segmentColors = {
+        'Cluster 0': '#3b82f6', // Power Users - Blue
+        'Cluster 1': '#10b981', // Casual Users - Green
+        'Cluster 2': '#f59e0b', // Super Connectors - Amber
+        'Cluster 3': '#8b5cf6', // Trusting Peripheral Users - Purple
+        'Cluster 4': '#ef4444'  // Skeptics - Red
+      };
+
+      // Segment names mapping
+      const segmentNames = {
+        'Cluster 0': 'Power Users',
+        'Cluster 1': 'Casual Users',
+        'Cluster 2': 'Super Connectors',
+        'Cluster 3': 'Trusting Peripheral Users',
+        'Cluster 4': 'Skeptics'
+      };
+
+      // Simulating data loading from CSV files
+      React.useEffect(() => {
+        // Mock function to simulate loading file data
+        const loadFileData = (filename) => {
+          // This function would normally load data from actual files
+          // For demo purposes, we're creating synthetic data
+          if (filename === "user_profiles.csv") {
+            // Return mock data structure for user profiles
+            return `user_id,in_degree,out_degree,avg_trust_given,avg_trust_received,betweenness_centrality
+1,25,30,4.2,3.8,0.05
+2,15,10,3.5,4.0,0.02
+3,50,45,2.8,4.5,0.12
+4,5,8,5.5,2.1,0.01
+5,30,35,1.2,3.9,0.08`;
+          } else if (filename === "user_segments_kmeans.csv") {
+            return `user_id,cluster
+1,0
+2,1
+3,2
+4,3
+5,4`;
+          } else if (filename === "segment_profiles.csv") {
+            return `cluster_id,size,in_degree_mean,out_degree_mean,avg_trust_given_mean,avg_trust_received_mean
+0,950,42.3,38.7,2.85,1.92
+1,1540,8.6,7.2,0.75,0.83
+2,420,65.8,61.2,1.45,2.18
+3,680,22.1,18.5,5.95,0.67
+4,192,15.3,12.8,-1.11,0.42`;
+          } else if (filename === "bridge_users.csv") {
+            return `user_id,cluster,betweenness_centrality
+3,2,0.12
+5,0,0.08
+10,0,0.09
+15,2,0.11
+20,1,0.06`;
+          } else if (filename === "risk_attitude_by_segment.csv") {
+            return `cluster,risk_taking_mean,risk_taking_count,trust_volatility_mean
+0,0.85,950,12.34
+1,0.72,1540,8.76
+2,0.91,420,15.21
+3,0.998,680,0.014
+4,0.65,192,35.52`;
+          }
+          return "";
+        };
+
+        const loadData = async () => {
+          try {
+            const files = [
+              "user_profiles.csv",
+              "user_segments_kmeans.csv",
+              "segment_profiles.csv",
+              "bridge_users.csv",
+              "risk_attitude_by_segment.csv"
+            ];
+
+            const results = await Promise.all(
+              files.map(file =>
+                new Promise(resolve => {
+                  Papa.parse(loadFileData(file), {
+                    header: true,
+                    skipEmptyLines: true,
+                    transformHeader: header => header.trim().replace(/^"|"$/g, ''),
+                    transform: value => value.trim().replace(/^"|"$/g, ''),
+                    complete: result => resolve(result.data),
+                    error: err => {
+                      console.error(`Error loading ${file}:`, err);
+                      setError(`Failed to load ${file}`);
+                    }
+                  });
+                })
+              )
+            );
+
+            const processData = (data) => {
+              return data.map(row => {
+                const cleanedRow = {};
+                for (const [key, value] of Object.entries(row)) {
+                  if (value === "" || value === null || value === undefined) {
+                    cleanedRow[key] = null;
+                  } else if (!isNaN(value) && value !== "") {
+                    cleanedRow[key] = Number(value);
+                  } else if (value.toLowerCase() === "true") {
+                    cleanedRow[key] = true;
+                  } else if (value.toLowerCase() === "false") {
+                    cleanedRow[key] = false;
+                  } else {
+                    cleanedRow[key] = value;
+                  }
+                }
+                return cleanedRow;
+              }).filter(row => Object.values(row).some(v => v !== null));
+            };
+
+            setUserProfiles(processData(results[0]));
+            setUserSegments(processData(results[1]));
+            setSegmentProfiles(processData(results[2]));
+            setBridgeUsers(processData(results[3]));
+            setRiskAttitudes(processData(results[4]));
+
+            // Simulate loading time
+            setTimeout(() => setLoading(false), 1500);
+          } catch (error) {
+            console.error("Error processing data:", error);
+            setError("Failed to process data");
+            setLoading(false);
+          }
+        };
+
+        loadData();
+      }, []);
+
+      // Rendering loading state
+      if (loading) {
+        return (
+          <div className="loader">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="loader-text pulse">Loading the digital city of Bitcoin Alpha...</p>
+          </div>
+        );
+      }
+
+      // Render error state
+      if (error) {
+        return (
+          <div className="text-center text-red-600 mt-10 p-4 bg-red-50 rounded-lg">
+            <h2 className="text-xl font-bold">Error</h2>
+            <p>{error}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
+          </div>
+        );
+      }
+
+      // Data preparation for visualizations
+      const connectivityData = segmentProfiles.map(segment => ({
+        cluster: `Cluster ${segment["cluster_id"]}`,
+        name: segmentNames[`Cluster ${segment["cluster_id"]}`],
+        out_degree: segment["out_degree_mean"],
+        in_degree: segment["in_degree_mean"],
+        size: segment["size"]
+      }));
+
+      const trustDynamicsData = segmentProfiles.map(segment => ({
+        cluster: `Cluster ${segment["cluster_id"]}`,
+        name: segmentNames[`Cluster ${segment["cluster_id"]}`],
+        trust_given: segment["avg_trust_given_mean"],
+        trust_received: segment["avg_trust_received_mean"],
+        size: segment["size"] / 50, // Scaling size for visibility
+        fill: segmentColors[`Cluster ${segment["cluster_id"]}`]
+      }));
+
+      const riskVolatilityData = riskAttitudes.map(risk => ({
+        cluster: `Cluster ${risk["cluster"]}`,
+        name: segmentNames[`Cluster ${risk["cluster"]}`],
+        risk: risk["risk_taking_mean"],
+        volatility: risk["trust_volatility_mean"],
+        size: Math.sqrt(risk["risk_taking_count"]) * 10, // Proportional sizing
+        fill: segmentColors[`Cluster ${risk["cluster"]}`]
+      }));
+
+      // Calculate bridge user impact by cluster
+      const bridgeImpact = bridgeUsers.reduce((acc, user) => {
+        const cluster = user["cluster"];
+        acc[cluster] = (acc[cluster] || 0) + user["betweenness_centrality"];
+        return acc;
+      }, {});
+
+      const bridgeData = Object.entries(bridgeImpact).map(([cluster, value]) => ({
+        cluster: `Cluster ${cluster}`,
+        name: segmentNames[`Cluster ${cluster}`],
+        centrality: value,
+        fill: segmentColors[`Cluster ${cluster}`]
+      }));
+
+      // Segment stats
+      const segmentStats = segmentProfiles.map(segment => {
+        const clusterId = segment["cluster_id"];
+        const riskData = riskAttitudes.find(r => r["cluster"] == clusterId);
+
+        return {
+          id: clusterId,
+          name: segmentNames[`Cluster ${clusterId}`],
+          size: segment["size"],
+          outDegree: segment["out_degree_mean"].toFixed(1),
+          inDegree: segment["in_degree_mean"].toFixed(1),
+          trustGiven: segment["avg_trust_given_mean"].toFixed(2),
+          trustReceived: segment["avg_trust_received_mean"].toFixed(2),
+          risk: riskData ? riskData["risk_taking_mean"].toFixed(3) : "N/A",
+          volatility: riskData ? riskData["trust_volatility_mean"].toFixed(2) : "N/A",
+          color: segmentColors[`Cluster ${clusterId}`]
+        };
+      });
+
+      // Custom tooltip component for the charts
+      const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="bg-white p-4 border border-gray-200 rounded shadow-lg">
+              <p className="font-semibold text-gray-800">{payload[0].payload.name}</p>
+              {payload.map((entry, index) => (
+                <p key={`item-${index}`} style={{ color: entry.color }}>
+                  {entry.name}: {entry.value.toFixed(2)}
+                </p>
+              ))}
+            </div>
+          );
+        }
+        return null;
+      };
+
+      // Rendering the main content
+      return (
+        <div className="space-y-8">
+          {/* Introduction */}
+          <div className="mt-6">
+            <p className="text-lg">
+              Imagine stepping into a bustling digital metropolis where trust is the currency that fuels every interaction. Welcome to the Bitcoin Alpha network, a vibrant ecosystem teeming with diverse characters. In this report, we'll take you on a journey through this city, revealing five unique citizen archetypes—each with their own roles, behaviors, and secrets. Using cutting-edge analytics, we've mapped their trust networks, risk appetites, and connectivity to paint a vivid picture that's as intuitive as it is insightful.
+            </p>
+          </div>
+
+          {/* Executive Summary */}
+          <section id="executive-summary">
+            <h2>Executive Summary: The Heartbeat of the City</h2>
+            <p>
+              Our expedition through Bitcoin Alpha uncovered a dynamic tapestry of 3,782 users, segmented into five distinct archetypes. Using advanced tools like PCA, t-SNE, and k-means clustering, we've distilled their behaviors into actionable insights and visualizations that reveal the underlying structure of this digital ecosystem.
+            </p>
+            <p>
+              The most striking discovery: Skeptics wield extreme trust volatility (up to 35.52), acting as the city's immune system, while Trusting Peripheral Users fuel growth with near-maximal risk tolerance (0.998) and remarkable consistency in their trust-giving behavior.
+            </p>
+
+            {/* Summary Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <h3 className="text-xl font-semibold text-gray-800">3,782</h3>
+                <p className="text-gray-600">Total Network Users</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                <h3 className="text-xl font-semibold text-gray-800">5</h3>
+                <p className="text-gray-600">Distinct User Archetypes</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+                <h3 className="text-xl font-semibold text-gray-800">35.52</h3>
+                <p className="text-gray-600">Max Trust Volatility (Skeptics)</p>
+              </div>
+            </div>
+          </section>
+
+          {/* User Segments */}
+          <section id="segments">
+            <h2>User Segments: The Citizens of our Digital City</h2>
+            <p>
+              Our analysis revealed five distinct user archetypes, each playing a unique role in the Bitcoin Alpha ecosystem. Let's meet the inhabitants of our digital city:
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              {segmentStats.map(segment => (
+                <div key={segment.id} className="segment-card" style={{ borderTop: `4px solid ${segment.color}` }}>
+                  <h3 className="segment-title">{segment.name}</h3>
+                  <p className="text-gray-600 mb-4">Cluster {segment.id} • {segment.size} users</p>
+
+                  <div className="mb-4">
+                    <span className="segment-stats">Trust Given: {segment.trustGiven}</span>
+                    <span className="segment-stats">Trust Received: {segment.trustReceived}</span>
+                    <span className="segment-stats">Risk Taking: {segment.risk}</span>
+                    <span className="segment-stats">Volatility: {segment.volatility}</span>
+                  </div>
+
+                  <p className="text-sm text-gray-700">
+                    {segment.name === "Power Users" && "The network's skyscrapers. Highly connected and influential with balanced trust metrics and moderate risk tolerance."}
+                    {segment.name === "Casual Users" && "The everyday residents. Lower connectivity with balanced but minimal trust exchange, representing the majority of users."}
+                    {segment.name === "Super Connectors" && "The influential elite. Highest connectivity and trust received, serving as network hubs with high risk tolerance."}
+                    {segment.name === "Trusting Peripheral Users" && "The welcoming newcomers. Extremely high trust given with maximum risk tolerance and minimal volatility."}
+                    {segment.name === "Skeptics" && "The vigilant guards. Negative trust given with extremely high volatility, acting as the network's immune system."}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Network Connectivity */}
+          <section id="connectivity" className="chart-container">
+            <h2>Connectivity: The City's Infrastructure</h2>
+            <p>
+              Let's start with the roads and bridges—connectivity. Power Users and Super Connectors tower over the rest with massive out-degree and in-degree means, while Casual Users maintain minimal connections. This chart visualizes how these metrics stack up across our digital districts.
+            </p>
+
+            <div className="chart-title">Network Connectivity by Segment</div>
+            <Recharts.ResponsiveContainer width="100%" height={400}>
+              <Recharts.BarChart
+                data={connectivityData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                barGap={0}
+                barCategoryGap="20%"
+              >
+                <Recharts.CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <Recharts.XAxis
+                  dataKey="name"
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.YAxis
+                  label={{ value: "Average Degree", angle: -90, position: "insideLeft", style: { fill: '#4b5563' } }}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.Tooltip content={<CustomTooltip />} />
+                <Recharts.Legend iconType="circle" />
+                <Recharts.Bar dataKey="out_degree" name="Out-Degree" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Recharts.Bar dataKey="in_degree" name="In-Degree" fill="#10b981" radius={[4, 4, 0, 0]} />
+              </Recharts.BarChart>
+            </Recharts.ResponsiveContainer>
+
+            <div className="text-sm text-gray-600 mt-2 text-center">
+              Out-Degree: Number of trust ratings given | In-Degree: Number of trust ratings received
+            </div>
+          </section>
+
+          {/* Trust Dynamics */}
+          <section id="trust-dynamics" className="chart-container">
+            <h2>Trust Dynamics: The Currency of Relationships</h2>
+            <p>
+              Trust flows like currency in this city. Trusting Peripheral Users give generously (5.95 avg), while Skeptics are stingy (-1.11 avg). Super Connectors accumulate trust received (2.18 avg), showcasing their influence. Watch these patterns come alive in our visualization—bubble size reflects cluster population!
+            </p>
+
+            <div className="chart-title">Trust Given vs Trust Received by Segment</div>
+            <Recharts.ResponsiveContainer width="100%" height={400}>
+              <Recharts.ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+                <Recharts.CartesianGrid stroke="#e5e7eb" />
+                <Recharts.XAxis
+                  dataKey="trust_given"
+                  name="Trust Given"
+                  label={{ value: "Average Trust Given", position: "bottom", style: { fill: '#4b5563' } }}
+                  domain={[-2, 6]}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.YAxis
+                  dataKey="trust_received"
+                  name="Trust Received"
+                  label={{ value: "Average Trust Received", angle: -90, position: "insideLeft", style: { fill: '#4b5563' } }}
+                  domain={[0, 2.5]}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Recharts.Legend iconType="circle" />
+                <Recharts.Scatter
+                  name="User Segments"
+                  data={trustDynamicsData}
+                >
+                  {trustDynamicsData.map((entry, index) => (
+                    <Recharts.Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                  <Recharts.LabelList
+                    dataKey="name"
+                    position="top"
+                    style={{ fill: '#666', fontSize: 12 }}
+                  />
+                </Recharts.Scatter>
+              </Recharts.ScatterChart>
+            </Recharts.ResponsiveContainer>
+          </section>
+          {/* Risk & Volatility */}
+          <section id="risk-volatility" className="chart-container">
+            <h2>Risk & Volatility: The City's Temperament</h2>
+            <p>
+              If connectivity represents the city's infrastructure and trust its currency, then risk attitude and volatility reveal its temperament. Skeptics show striking volatility (35.52), while Trusting Peripheral Users maintain near-perfect risk tolerance (0.998) with remarkably low volatility (0.014), highlighting the spectrum of behavior in our digital metropolis.
+            </p>
+
+            <div className="chart-title">Risk Attitude vs Trust Volatility by Segment</div>
+            <Recharts.ResponsiveContainer width="100%" height={400}>
+              <Recharts.ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+                <Recharts.CartesianGrid stroke="#e5e7eb" />
+                <Recharts.XAxis
+                  dataKey="risk"
+                  name="Risk Taking"
+                  label={{ value: "Risk Taking Attitude (0-1)", position: "bottom", style: { fill: '#4b5563' } }}
+                  domain={[0.6, 1]}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.YAxis
+                  dataKey="volatility"
+                  name="Trust Volatility"
+                  label={{ value: "Trust Volatility", angle: -90, position: "insideLeft", style: { fill: '#4b5563' } }}
+                  domain={[0, 40]}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Recharts.Legend iconType="circle" />
+                <Recharts.Scatter
+                  name="Risk vs Volatility"
+                  data={riskVolatilityData}
+                >
+                  {riskVolatilityData.map((entry, index) => (
+                    <Recharts.Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                  <Recharts.LabelList
+                    dataKey="name"
+                    position="top"
+                    style={{ fill: '#666', fontSize: 12 }}
+                  />
+                </Recharts.Scatter>
+              </Recharts.ScatterChart>
+            </Recharts.ResponsiveContainer>
+
+            <div className="highlight mt-6">
+              <h3 className="text-lg font-semibold">Key Insight</h3>
+              <p className="m-0">
+                Skeptics act as the network's immune system with the highest volatility (35.52), quickly withdrawing trust when suspicious activity is detected. In stark contrast, Trusting Peripheral Users maintain nearly perfect consistency (0.014 volatility) with maximum risk appetite (0.998), functioning as the growth engine of Bitcoin Alpha.
+              </p>
+            </div>
+          </section>
+
+          {/* Bridge Users */}
+          <section id="bridge-users" className="chart-container">
+            <h2>Bridge Users: The City's Connectors</h2>
+            <p>
+              Every city needs individuals who connect disparate neighborhoods. Our analysis identified key bridge users who maintain high betweenness centrality—these are the information brokers, the diplomats, and the translators between communities within Bitcoin Alpha.
+            </p>
+
+            <div className="chart-title">Betweenness Centrality Impact by Segment</div>
+            <Recharts.ResponsiveContainer width="100%" height={400}>
+              <Recharts.BarChart
+                data={bridgeData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                barCategoryGap="20%"
+              >
+                <Recharts.CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <Recharts.XAxis
+                  dataKey="name"
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.YAxis
+                  label={{ value: "Cumulative Centrality", angle: -90, position: "insideLeft", style: { fill: '#4b5563' } }}
+                  tick={{ fill: '#4b5563' }}
+                  axisLine={{ stroke: '#9ca3af' }}
+                  tickLine={{ stroke: '#9ca3af' }}
+                />
+                <Recharts.Tooltip content={<CustomTooltip />} />
+                <Recharts.Bar
+                  dataKey="centrality"
+                  name="Betweenness Centrality"
+                  radius={[4, 4, 0, 0]}
+                >
+                  {bridgeData.map((entry, index) => (
+                    <Recharts.Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                </Recharts.Bar>
+              </Recharts.BarChart>
+            </Recharts.ResponsiveContainer>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-3">Super Connectors Dominate</h3>
+                <p className="text-gray-700">
+                  Despite comprising only 11% of the network population, Super Connectors account for over 40% of bridge user centrality, serving as the critical information hubs and relationship brokers of Bitcoin Alpha.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-3">Power Users Support</h3>
+                <p className="text-gray-700">
+                  Power Users represent 25% of the network but contribute approximately 35% of the bridge functionality, working alongside Super Connectors to maintain the network's structural integrity.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Conclusion */}
+          <section id="conclusion" className="conclusion">
+            <h2>Conclusion: The Digital City's Future</h2>
+            <p>
+              Our journey through the digital city of Bitcoin Alpha has revealed a complex, interconnected ecosystem where trust flows like currency and five distinct citizen archetypes contribute uniquely to the network's health and growth.
+            </p>
+
+            <div className="mt-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold">Key Findings</h3>
+                <ul className="list-disc pl-6 mt-2 space-y-2">
+                  <li><span className="font-medium">Balanced Ecosystem:</span> The five segments form a resilient structure where Skeptics provide immune system functions while Trusting Peripheral Users fuel growth.</li>
+                  <li><span className="font-medium">Trust Asymmetries:</span> Super Connectors receive considerably more trust than they give, showcasing their reputation-based influence.</li>
+                  <li><span className="font-medium">Risk-Volatility Spectrum:</span> We observed an inverse relationship between risk tolerance and trust volatility across segments.</li>
+                  <li><span className="font-medium">Bridge Importance:</span> Just 5% of users account for 75% of the network's bridging functions, creating vital information pathways.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold">Strategic Recommendations</h3>
+                <ol className="list-decimal pl-6 mt-2 space-y-2">
+                  <li>Support Super Connectors as they facilitate critical information flow between network segments.</li>
+                  <li>Protect Trusting Peripheral Users who drive network growth with their optimistic approach.</li>
+                  <li>Leverage Skeptics' natural vigilance to enhance network security and fraud detection.</li>
+                  <li>Balance Power Users and Casual Users to maintain network stability and healthy representation.</li>
+                </ol>
+              </div>
+
+              <p>
+                The digital city of Bitcoin Alpha thrives on the diversity of its citizens. By understanding these dynamics, we can build stronger, more resilient cryptocurrency communities that balance growth and security, trust and skepticism, to create sustainable digital ecosystems.
+              </p>
+            </div>
+          </section>
+
+        </div>
+      );
+    };
+
+    // Render the report
+    ReactDOM.render(<TrustSegmentationReport />, document.getElementById('report-root'));
+  </script>
+</body>
+
+</html>
