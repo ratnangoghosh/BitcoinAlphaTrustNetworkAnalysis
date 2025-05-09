@@ -527,3 +527,145 @@ These segments form a balanced ecosystem, supporting network growth and security
 - **User Experience**: Tailored interfaces enhance engagement.
 
 # Application 3 - Find the Odd Ones Out (Anomalies)
+
+## Overview 
+
+`Application3.py` is a Python script designed to detect anomalous trust patterns within the Bitcoin Alpha trust network, a peer-to-peer cryptocurrency platform where users assign trust ratings to one another ranging from -10 (strong distrust) to +10 (strong trust). The script employs a combination of graph neural networks (GNNs), clustering techniques, and temporal analysis to identify suspicious behaviors such as manipulation rings, Sybil attacks, and unusual trust clusters. The core functionality is encapsulated in the `AnomalousTrustDetector` class, which processes the trust network data, learns node embeddings using a GNN, and applies various detection methods to uncover anomalies.
+
+### Purpose
+
+The primary goal of the code is to enhance the security and integrity of decentralized trust networks by identifying potentially malicious or manipulative behaviors. Specifically, it aims to:
+
+- **Detect Anomalous Clusters**: Identify groups of users with unusually high internal trust compared to their external relationships, which might indicate manipulation or collusion.
+- **Identify Temporal Anomalies**: Pinpoint days with statistically unusual rating patterns, potentially signaling coordinated actions or significant platform events.
+- **Uncover Trust Asymmetry**: Highlight highly asymmetric trust relationships that could reflect disputes or retaliatory actions.
+- **Detect Negative Subgraphs**: Find clusters dominated by distrust, indicating conflict zones within the network.
+- **Spot Sybil Attacks**: Identify groups of users created in a short time window with suspicious internal rating patterns, suggestive of fake identities.
+- **Find Manipulation Rings**: Detect densely connected groups with artificially inflated trust ratings, pointing to coordinated reputation boosting.
+
+---
+
+## Key Components and Functionality
+
+### 1. **Class Structure: `AnomalousTrustDetector`**
+
+- **Initialization** (`__init__`):
+  - Takes a CSV file path containing trust network data with columns: `source`, `target`, `rating`, and `time`.
+  - Sets up attributes to store the dataset, graphs (NetworkX and PyTorch Geometric), node features, GNN model, and embeddings.
+
+- **Technologies Used**:
+  - **NetworkX**: For traditional graph construction and analysis.
+  - **PyTorch Geometric (PyG)**: For GNN-based learning and graph data handling.
+
+### 2. **Data Loading and Preprocessing** (`load_data`)
+
+- **Functionality**:
+  - Reads the CSV into a Pandas DataFrame and converts UNIX timestamps to datetime objects for temporal analysis.
+  - Provides basic statistics: total ratings (24,186), unique users (3,783), and rating distribution (93.6% positive, 6.4% negative).
+  - Calls `create_graph` to build the network structures.
+
+- **Graph Construction** (`create_graph`):
+  - Constructs a directed weighted graph using NetworkX (`nx_G`) with edges weighted by ratings.
+  - Maps nodes to contiguous indices and creates PyG tensors: `edge_index` (adjacency list), `edge_attr` (ratings), and `edge_time` (timestamps).
+  - Assembles a PyG `Data` object with node features.
+
+### 3. **Node Feature Engineering** (`compute_node_features`)
+
+- **Features Computed**:
+  - For each node, calculates six features:
+    1. In-degree (number of ratings received).
+    2. Out-degree (number of ratings given).
+    3. Average rating received.
+    4. Average rating given.
+    5. Variance of ratings received.
+    6. Proportion of negative ratings received.
+  - Standardizes these features using `StandardScaler` to ensure uniform scale for GNN input.
+
+- **Purpose**: Captures individual trust behavior and activity patterns, forming the basis for GNN learning.
+
+### 4. **Graph Neural Network Model** (`build_gnn_model`)
+
+- **Architecture**:
+  - Implements a 3-layer Graph Convolutional Network (GCN) using `GCNConv` layers, outputting 32-dimensional node embeddings.
+  - Includes ReLU activation and dropout (p=0.2) for regularization.
+
+- **Training**:
+  - Uses an unsupervised approach, minimizing the reconstruction error of edge weights (via dot products of embeddings) with MSE loss.
+  - Trains for 100 epochs using the Adam optimizer (learning rate 0.01).
+
+- **Output**: Generates node embeddings that encode the graph’s structure and trust relationships for anomaly detection.
+
+### 5. **Anomaly Detection Methods**
+
+#### a. **Anomalous Cluster Detection** (`detect_anomalous_clusters`)
+- **Method**:
+  - Applies KMeans clustering (5 clusters) to node embeddings.
+  - Computes internal vs. external trust means and ratios for each cluster.
+  - Flags clusters with high internal-to-external trust ratios (>1.5), high internal trust (>5) significantly exceeding external trust, or low variance and large size (>10 nodes).
+- **Findings**: Identified two anomalous clusters (e.g., Cluster 1: 248 users, trust ratio 2.03; Cluster 4: 76 users, trust ratio 1.96), suggesting potential manipulation or strong internal cohesion.
+
+#### b. **Temporal Anomaly Detection** (`detect_temporal_anomalies`)
+- **Method**:
+  - Aggregates ratings by day, calculating mean and count.
+  - Uses 7-day rolling averages to compute z-scores, flagging days with mean z-score >2 or count z-score >2.
+  - Visualizes time series and lists active users on anomalous days.
+- **Findings**: Detected 71 anomalous days (2010-2015), including spikes in 2011 and an extreme day in December 2015 (mean rating -10).
+
+#### c. **Trust Asymmetry Detection** (`detect_trust_asymmetry`)
+- **Method**:
+  - Identifies bidirectional relationships and calculates asymmetry as the absolute difference in ratings.
+  - Flags pairs with asymmetry >10 or opposite signs (e.g., +10 vs. -10).
+  - Plots an asymmetry histogram.
+- **Findings**: Found 248 highly asymmetric relationships out of 10,062 bidirectional pairs, with extreme cases showing 20-point differences.
+
+#### d. **Negative Subgraph Detection** (`detect_negative_subgraphs`)
+- **Method**:
+  - Extracts a subgraph of negative edges and finds connected components (size ≥3) in its undirected form.
+  - Flags components with a negative-to-total edge ratio >0.5.
+  - Visualizes the largest negative cluster.
+- **Findings**: Identified four clusters with high negative ratios (e.g., Component 1: 3 nodes, 100% negative).
+
+#### e. **Sybil Attack Detection** (`detect_sybil_attacks`)
+- **Method**:
+  - Groups users by first appearance into 20 time windows, identifying windows with unusually high new-user counts.
+  - Flags groups with high internal positive ratings (>80%) and low external positive ratings, indicating rapid formation of tight-knit groups.
+- **Purpose**: Detects potential fake identities created to manipulate trust.
+
+#### f. **Manipulation Ring Detection** (`find_manipulation_rings`)
+- **Method**:
+  - Extracts a subgraph of strong positive edges (≥8) and finds dense components (density >0.5).
+  - Flags groups with high internal ratings (>8), reciprocity (>0.3), and significant internal-external rating differences (>3).
+  - Visualizes the largest ring.
+- **Findings**: Identified five rings (e.g., Component 1: 3 nodes, density 1.0, average rating 10.0, reciprocity 1.0).
+
+### 6. **Full Analysis** (`run_full_analysis`)
+- **Functionality**:
+  - Orchestrates the entire pipeline: data loading, GNN training, and execution of all detection methods.
+  - Returns a dictionary of results and prints a summary of findings.
+
+---
+
+## Technical Details
+
+- **Dependencies**:
+  - PyTorch, PyTorch Geometric, NetworkX, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn.
+- **Input Data**:
+  - Bitcoin Alpha dataset: 24,186 ratings, 3,783 users, with a strong positive bias (93.6% positive).
+- **Output**:
+  - Visualizations (e.g., PCA cluster plots, temporal anomaly graphs, subgraph drawings) and textual summaries of anomalies.
+
+---
+
+## Key Insights from the Report
+
+- **Anomalous Clusters**: Two clusters with high internal trust suggest potential manipulation or echo chambers.
+- **Temporal Anomalies**: 71 days with unusual patterns indicate periods of volatility or coordination.
+- **Trust Asymmetry**: 248 extreme cases highlight disputes or retaliation.
+- **Negative Subgraphs**: Four clusters of distrust point to conflict zones.
+- **Manipulation Rings**: Five groups with inflated ratings suggest coordinated boosting.
+
+---
+
+## Implications
+
+This code provides a robust framework for analyzing trust networks, offering insights into vulnerabilities and manipulative behaviors. It supports platform integrity by identifying anomalies that could undermine trust mechanisms, making it a valuable tool for securing decentralized systems like Bitcoin Alpha.
