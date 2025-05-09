@@ -137,6 +137,8 @@ click the above image to view the interactive website
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_temporal_anomalies.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_trust_asymmetry.png?raw=true)
 
+[View Bitcoin Alpha Trust Network Analysis](http://htmlpreview.github.io/?https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/A3.html)
+
 # References
 
 - [Dynamics of Epidemic Spreading on Signed Networks](https://www.sciencedirect.com/science/article/pii/S0960077921006482)
