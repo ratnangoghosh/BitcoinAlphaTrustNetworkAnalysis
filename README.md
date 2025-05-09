@@ -56,11 +56,11 @@ This simulation provides a robust tool for understanding distrust in trust-based
 
 ## Output
 
-- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/critical_threshold.png?raw=true)
-- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/defense_strategies.png?raw=true)
-- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/network_structure.png?raw=true)
-- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/super_spreaders.png?raw=true)
-- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/simulation_results.png?raw=true)
+- [critical threshold](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/critical_threshold.png?raw=true)
+- [defense strategies](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/defense_strategies.png?raw=true)
+- [network structure](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/network_structure.png?raw=true)
+- [super spreaders](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/super_spreaders.png?raw=true)
+- [simulation results](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/simulation_results.png?raw=true)
 
 # Application 2 - Group Users into Behaviour based Categories.
 
