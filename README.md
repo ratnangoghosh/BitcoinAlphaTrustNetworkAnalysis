@@ -54,6 +54,14 @@ The primary goal is to:
 ## Implications
 This simulation provides a robust tool for understanding distrust in trust-based networks, offering insights into monitoring influential nodes, tuning platform parameters (e.g., `alpha`), and designing structural interventions to enhance network resilience.
 
+## Output
+
+- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/critical_threshold.png?raw=true)
+- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/defense_strategies.png?raw=true)
+- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/network_structure.png?raw=true)
+- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/super_spreaders.png?raw=true)
+- [](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/simulation_results.png?raw=true)
+
 # Application 2 - Group Users into Behaviour based Categories.
 
 Code - [Application2.py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application2.py)
@@ -87,7 +95,7 @@ Detailed Explanation - [Application3_Report.pdf](https://github.com/ratnangoghos
 
 `Application3.py` is a Python script designed to detect anomalous trust patterns within the Bitcoin Alpha trust network, a peer-to-peer cryptocurrency platform where users assign trust ratings to one another ranging from -10 (strong distrust) to +10 (strong trust). The script employs a combination of graph neural networks (GNNs), clustering techniques, and temporal analysis to identify suspicious behaviors such as manipulation rings, Sybil attacks, and unusual trust clusters. The core functionality is encapsulated in the `AnomalousTrustDetector` class, which processes the trust network data, learns node embeddings using a GNN, and applies various detection methods to uncover anomalies.
 
-### Purpose
+## Purpose
 
 The primary goal of the code is to enhance the security and integrity of decentralized trust networks by identifying potentially malicious or manipulative behaviors. Specifically, it aims to:
 
