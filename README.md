@@ -29,3 +29,6 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
 2. Install dependencies:
    ```bash
    pip install networkx pandas numpy matplotlib seaborn ffmpeg-python
+
+# Application 1 - Where Distrust Lives? How it Spreads? Who Drives it? When it Explodes? How can you Stop it?
+
