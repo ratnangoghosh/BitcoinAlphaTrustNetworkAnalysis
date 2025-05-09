@@ -2,6 +2,8 @@
 
 This repository contains code to analyze and simulate distrust cascades and triadic sign‐pattern transitions on the Bitcoin-Alpha trust network.
 
+Detailed Overview - [Presentation.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Presentation.pdf)
+
 ## Dataset
 
 We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.  
