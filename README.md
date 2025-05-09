@@ -32,6 +32,8 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
 
 # Application 1 - Where Distrust Lives? How it Spreads? Who Drives it? When it Explodes? How can you Stop it?
 
+Detailed Explanation - [Application1_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/edit/main/Application1_Report.pdf)
+
 ## Overview
 
 The code in `Application1.py` implements a distrust cascade simulation within the Bitcoin Alpha trust network, modeled as a signed-weighted directed graph. It explores how distrust spreads through negative trust relationships, identifies influential nodes (super-spreaders), determines critical thresholds for widespread propagation, and evaluates defense strategies to mitigate distrust. The simulation leverages a contagion model inspired by epidemic spreading (SIR model), adapted to a trust context, and is encapsulated in the `DistrustCascadeSimulation` class.
