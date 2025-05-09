@@ -126,6 +126,9 @@ This code provides a robust framework for analyzing trust networks, offering ins
 
 ## Output
 
+[![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/A3_ss.png?raw=true)](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/docs/A3.html)
+click the above image to view the interactive website
+
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T1.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/T2.png?raw=true)
 ![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/bitcoin_clusters.png?raw=true)
