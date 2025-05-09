@@ -13,7 +13,7 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
   - `TARGET` (int): user ID of the rated  
   - `RATING` (int): –10…+10  
   - `TIME` (int): Unix timestamp (seconds since 1970-01-01 UTC)  
-- **Original data:** [snap.stanford.edu/data/soc-sign-bitcoin-alpha.html](https://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html) :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+- **Original data:** [snap.stanford.edu/data/soc-sign-bitcoin-alpha.html](https://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html)
 
 ## Files
 
