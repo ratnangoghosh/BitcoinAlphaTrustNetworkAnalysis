@@ -32,7 +32,9 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
 
 # Application 1 - Where Distrust Lives? How it Spreads? Who Drives it? When it Explodes? How can you Stop it?
 
-Detailed Explanation - [Application1_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/edit/main/Application1_Report.pdf)
+Code - [Application1,py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application1.py)
+
+Detailed Explanation - [Application1_Report.pdf](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application1_Report.pdf)
 
 ## Overview
 
