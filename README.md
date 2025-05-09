@@ -32,22 +32,6 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
 
 # Application 1 - Where Distrust Lives? How it Spreads? Who Drives it? When it Explodes? How can you Stop it?
 
-## 1. Introduction  
-This report provides a detailed analysis of the **DistrustCascadeSimulation** implementation, which models how distrust propagates through a Bitcoin trust network. The simulation is built on a signed‐weighted network where users rate each other on a scale from –10 (complete distrust) to +10 (complete trust). The implementation explores important network dynamics including distrust propagation patterns, identification of influential nodes, critical thresholds for cascade behavior, and potential defense strategies.
-
----
-
-## 2. Dataset Overview  
-The simulation uses the **Bitcoin Alpha trust network** dataset, structured as follows:
-
-- **Format:** CSV with columns `SOURCE`, `TARGET`, `RATING`, `TIME`  
-- **Nodes:** Bitcoin Alpha platform users (identified by numerical IDs)  
-- **Edges:** Directed trust/distrust relationships between users  
-- **Weights:** Ratings normalized from [-10, 10] to [-1, 1]  
-- **Network Type:** Signed, directed, weighted graph  
-
----
-
 ## 3. Core Implementation Details
 
 ### 3.1 Class Structure and Initialization  
@@ -342,8 +326,3 @@ Bar chart comparing baseline vs. intervention rates; shows betweenness removal a
 * Fairness score distribution
 
 ---
-
-*This README.md captures the full scope of Deliverable 1 for Group 33’s project on the Bitcoin Alpha trust network.*
-
-```
-```
