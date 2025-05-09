@@ -6,6 +6,8 @@ Detailed Overview - [Presentation.pdf](https://github.com/ratnangoghosh/BitcoinA
 
 ## Dataset
 
+Dataset - [soc-sign-bitcoinalpha.csv](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/soc-sign-bitcoinalpha.csv)
+
 We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.  
 - **Nodes:** 3,783  
 - **Edges:** 24,186  
