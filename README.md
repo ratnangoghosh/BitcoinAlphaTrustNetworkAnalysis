@@ -85,6 +85,11 @@ The primary objectives of the code are:
 - **Trust Optimization**: Segment-specific trust weighting improves accuracy.
 - **User Experience**: Tailored interfaces enhance engagement.
 
+## Ouput
+
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/user_segments_pca.png?raw=true)
+![](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/output_images/user_segments_tsne.png?raw=true)
+
 # Application 3 - Find the Odd Ones Out (Anomalies)
 
 Code - [Application3.py](https://github.com/ratnangoghosh/BitcoinAlphaTrustNetworkAnalysis/blob/main/Application3.py)
