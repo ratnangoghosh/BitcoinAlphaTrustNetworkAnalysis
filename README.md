@@ -17,7 +17,8 @@ We use the **Bitcoin-Alpha** “who-trusts-whom” network from SNAP.
   - `TARGET` (int): user ID of the rated  
   - `RATING` (int): –10…+10  
   - `TIME` (int): Unix timestamp (seconds since 1970-01-01 UTC)  
-- **Original data:** [snap.stanford.edu/data/soc-sign-bitcoin-alpha.html](https://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html)
+- **Original Data:** [snap.stanford.edu/data/soc-sign-bitcoin-alpha.html](https://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html)
+- **Original Paper:** [Edge Weight Prediction in Weighted Signed Networks](https://cs.stanford.edu/~srijan/pubs/wsn-icdm16.pdf)
 
 ## Files
 
